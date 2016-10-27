@@ -21,6 +21,7 @@
 
 
 void setup() {
+  Serial.begin(9600);
   // put your setup code here, to run once:
   // Initialise the IO and ISR
     vw_set_ptt_inverted(true); // Required for DR3100
@@ -34,5 +35,9 @@ void loop() {
   // put your main code here, to run repeatedly:
   const char *msg = "hello";
   // Send a reply
+    Serial.println("START: ");
   vw_send((uint8_t *)msg, strlen(msg));
+      Serial.println("STOP: ");
+      delay(500);
+  
 }
