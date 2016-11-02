@@ -1,6 +1,7 @@
 #include <avr/sleep.h>
 
 long randNumber;
+long randNumber2;
 
 void setup(){
   Serial.begin(9600);
@@ -45,10 +46,12 @@ int i = t%12;
     // turn the pin off:
     digitalWrite(ledPins[i], LOW);
     digitalWrite(13, LOW);
-    delay(10);
+    delay(2);
   }
 randNumber=    random(1, 7);
+randNumber2=    random(1, 7);
 Serial.println(randNumber);
+Serial.println(randNumber2);
 digitalWrite(3,true);
 digitalWrite(4,randNumber == 2 || randNumber > 2);
 digitalWrite(5,randNumber == 3 || randNumber > 3);
@@ -57,15 +60,12 @@ digitalWrite(7,randNumber == 5 || randNumber > 5);
 digitalWrite(8,randNumber == 6 || randNumber > 6);
 
 
-randNumber=    random(1, 7);
-Serial.println(randNumber);
-
-digitalWrite(11,true);
-digitalWrite(12,randNumber == 2 || randNumber > 2);
-digitalWrite(14,randNumber == 3 || randNumber > 3);
-digitalWrite(15,randNumber == 4 || randNumber > 4); //4
-digitalWrite(16,randNumber == 5 || randNumber > 5);
-digitalWrite(17,randNumber == 6 || randNumber > 6);
+digitalWrite(17,true);
+digitalWrite(16,randNumber2 == 2 || randNumber2 > 2);
+digitalWrite(15,randNumber2 == 3 || randNumber2 > 3);
+digitalWrite(14,randNumber2 == 4 || randNumber2 > 4); //4
+digitalWrite(12,randNumber2 == 5 || randNumber2 > 5);
+digitalWrite(11,randNumber2 == 6 || randNumber2 > 6);
 
 
 
