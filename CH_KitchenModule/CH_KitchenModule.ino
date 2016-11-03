@@ -33,9 +33,6 @@ int    Data3=0;
 int    Data4=0;
 int    Data5=0;
 int    Data6=0;
-char strData[10];
-
-
 };
 
 centralHeatingData HData;
@@ -47,7 +44,7 @@ void setup() {
   vw_set_ptt_inverted(true); // Required for DR3100
   vw_set_tx_pin(TX_MODULE);
   vw_set_rx_pin(RX_MODULE);
-  vw_setup(1000);	 // Bits per sec
+  vw_setup(2000);	 // Bits per sec
   //    vw_rx_start();       // Start the receiver PLL running
 }
 
@@ -66,12 +63,15 @@ HData.Data4=0;
 HData.Data5=0;
 HData.Data6=0;
 //HData.strData='012345678';
-
+int c =1;
+for (int i=1;i<80;i++){
+if (c>2){
+c=0;
+}
+ HData.Command=c++ ; 
+  HData.Data1=i;
+  
   Serial.println("START: ");
-  digitalWrite(13, 0);
-  digitalWrite(13, 1);
-  digitalWrite(13, 0);
-  digitalWrite(13, 1);
   
   vw_send((uint8_t *)&HData, sizeof(HData));
   
@@ -86,5 +86,5 @@ HData.Data6=0;
     delay(100);
     digitalWrite(13, 0);
   delay(5000);
-
+}
 }
