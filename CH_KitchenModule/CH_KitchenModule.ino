@@ -65,7 +65,7 @@ void loop() {
   HData.Data4 = 0;
   HData.Data5 = 0;
   HData.Data6 = 0;
-  //HData.strData='012345678';
+
   int c = 1;
   for (int i = 1; i < 40; i++) {
     if (c > 3) {

@@ -1,0 +1,30 @@
+ device list
+ 00 - master of communication
+ 01 - boiler
+ 02 - kitchen
+ 03 - sensor bedroom 01
+ 04 - sensor bedroom 02
+ 05 - sensor bedroom 03
+ 06 - sensor bedroom 04
+ 07 - sensor livingroom 01
+ 08 - sensor livingroom 02
+ 09 - sensor hall 01
+ 10 - sensor hall 02
+ 
+ decided to have separate commands per function/device
+ commandID - from - to - description |reply|
+ 000 from 00 to 01 sets boiler & pump off    | 01 sends sensor details t0/1 t2/3, t4/5 boilerState6, pumpState7 |
+ 001 from 00 to 01 sets hot water mode + temp| 01 sends sensor details t0/1 t2/3, t4/5 boilerState6, pumpState7 |
+ 002 from 00 to 01 sets heating mode + temp  | 01 sends sensor details t0/1 t2/3, t4/5 boilerState6, pumpState7 |
+ 003 from 00 to 03 get temp and humidify     | 03 sends sensor details t0/1 h2/3, 
+ 004 from 00 to 04 get temp and humidify     | 04 sends sensor details t0/1 h2/3, 
+ 005 from 00 to 05 get temp and humidify     | 05 sends sensor details t0/1 h2/3, 
+ 006 from 00 to 06 get temp and humidify     | 06 sends sensor details t0/1 h2/3, 
+ 007 from 00 to 07 get temp and humidify     | 07 sends sensor details t0/1 h2/3, 
+ 008 from 00 to 08 get temp and humidify     | 08 sends sensor details t0/1 h2/3, 
+ 009 from 00 to 09 get temp and humidify     | 09 sends sensor details t0/1 h2/3, 
+ 010 from 00 to 10 get temp and humidify     | 10 sends sensor details t0/1 h2/3, 
+ 
+ 
+ 
+ 
