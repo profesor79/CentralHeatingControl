@@ -1,5 +1,3 @@
-#include <definitions.h>
-
 // Include the libraries we need
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -21,7 +19,26 @@
 #define TX_MODULE 10
 #define RX_MODULE 11
 
-struct centralHeatingData receivedData;
+
+struct centralHeatingData
+{
+int    From; 
+int    Seq; 
+int    To =-1;
+int    Command ; 
+int    Ack;
+  int    Data1=0;
+int    Data2=0;
+int    Data3=0;
+int    Data4=0;
+int    Data5=0;
+int    Data6=0;
+char strData[10];
+
+
+};
+
+centralHeatingData HData;
 
 void setup() {
   Serial.begin(9600);
@@ -36,12 +53,19 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
- centralHeatingData receivedData2 ;
- receivedData2.To=1;
- receivedData2.Command=1;
- receivedData2.Data1=40;
- 
- 
+// HData receivedData2 ; //  = {2,1,1,1,0,1,2,3,4,5,6,"0123456789"};
+HData.From =1; 
+HData.Seq =1;
+HData.To =1;
+HData.Command=2 ; 
+HData.Ack =1;
+HData.Data1=0;
+HData.Data2=0;
+HData.Data3=0;
+HData.Data4=0;
+HData.Data5=0;
+HData.Data6=0;
+//HData.strData='012345678';
 
   Serial.println("START: ");
   digitalWrite(13, 0);
@@ -49,7 +73,9 @@ void loop() {
   digitalWrite(13, 0);
   digitalWrite(13, 1);
   
-  vw_send((uint8_t *)&receivedData2, sizeof( receivedData2));
+  vw_send((uint8_t *)&HData, sizeof(HData));
+  
+//    vw_send((uint8_t *)&receivedData2, sizeof( receivedData2));
   vw_wait_tx();       
   
   Serial.println("STOP: ");

@@ -29,7 +29,7 @@
 #define On 0   // inversed logic for relays
 #define Off 1
 
-struct centralHeatingData receivedData;
+centralHeatingData receivedData;
 int boilerState = Off, pumpState = Off;
 int requestedTemp = 20;
 int switchReading;     // the current reading from the input pin

@@ -1,11 +1,11 @@
-typedef struct centralHeatingData
+struct centralHeatingData
 {
 int    From; 
 int    Seq; 
 int    To =-1;
 int    Command ; 
 int    Ack;
-int    Data1=0;
+  int    Data1=0;
 int    Data2=0;
 int    Data3=0;
 int    Data4=0;
