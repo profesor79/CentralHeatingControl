@@ -3,7 +3,7 @@
 #include <DallasTemperature.h>
 #include <EEPROM.h>
 #include <VirtualWire.h>
-
+#include "definitions.h"
 
 // Data wire is plugged into port 2 on the Arduino
 #define BLUE_TEMP_SENSOR 		3
@@ -26,11 +26,15 @@
 #define Water55 16
 #define Water65 17
 
+#define On 0   // inversed logic for relays
+#define Off 1
 
-
+struct centralHeatingData receivedData;
+int boilerState = Off, pumpState = Off;
+int requestedTemp = 20;
 int switchReading;     // the current reading from the input pin
 int state = 0;      // the current state of the system
-// 0 start
+// 0 stop
 // 1 heating water 25 deg
 // 2 heating water 35 deg
 // 3 hot water in cylinder -  water 55 deg
@@ -42,7 +46,7 @@ int state = 0;      // the current state of the system
 // will quickly become a bigger number than can be stored in an int.
 long time = 0;         // the last time the output pin was toggled
 long debounce = 400;   // the debounce time, increase if the output flickers
-long time2 = 0;
+long time2 = -30000;  // force temp reading
 long tempDebounce = 30000;
 
 
@@ -95,8 +99,7 @@ void setup(void)
 
   state = stateEprom;
 
-
-  Serial.println("Dallas Temperature IC Control Library Demo");
+  Serial.println("Boiler control unit");
 
   // Start up the library
   blueTempSensor.begin();
@@ -116,7 +119,6 @@ void setup(void)
   brownTempSensor.setResolution( brownThermometer , TEMPERATURE_PRECISION);
 
   pinMode(LED, OUTPUT);
-
   pinMode(Water25,  OUTPUT);
   pinMode(Water35,  OUTPUT);
   pinMode(Water55,  OUTPUT);
@@ -127,18 +129,18 @@ void setup(void)
 
   digitalWrite( BOILER, 0);
   digitalWrite( PUMP, 0);
-for( int f = 0 ; f<4 ;f++){
-    Serial.print(4-f);
-        Serial.println("...");
-        delay(1000);
-        
+  for ( int f = 0 ; f < 4 ; f++) {
+    Serial.print(4 - f);
+    Serial.println("...");
+    delay(1000);
+
     // Initialise the IO and ISR
     vw_set_ptt_inverted(true); // Required for DR3100
     vw_set_tx_pin(TX_MODULE);
     vw_set_rx_pin(RX_MODULE);
     vw_setup(1000);	 // Bits per sec
     vw_rx_start();       // Start the receiver PLL running
-}
+  }
 }
 
 
@@ -146,7 +148,6 @@ for( int f = 0 ; f<4 ;f++){
 float getTemperature(DeviceAddress deviceAddress, DallasTemperature bus)
 {
   return bus.getTempC(deviceAddress);
-
 }
 
 
@@ -155,37 +156,93 @@ float getTemperature(DeviceAddress deviceAddress, DallasTemperature bus)
  */
 void loop(void)
 {
-
   readTemp();
-  handleSwitch();
+  // handleSwitch();
   receiveRadio();
+  handleBoiler();
+ delay(500);
+}
 
+
+void   handleBoiler() {
+  // 0 - stop heating
+  // 1 - hot water
+  // 2 - standard heating
+
+  if (state == 0)
+  {
+    Serial.println("Boiler stop");
+    boilerState = Off;
+    pumpState = Off;
+  }
+
+  if (state == 1)
+  {
+    Serial.println("hot water");
+    if (blueTemperature > requestedTemp + 1) {
+      boilerState = Off;
+      pumpState = Off;
+      digitalWrite(LED, 1);
+      Serial.print(", shutting boiler...., ");
+      digitalWrite( BOILER, boilerState);
+      //wait 25 sec to coll down
+      delay(25000);
+    }
+
+    if (blueTemperature < requestedTemp + 1) {
+      boilerState = On;
+      pumpState = On;
+    }
+  }
+
+  if (state > 1 )
+  {
+
+    Serial.println("standard heating");
+    if (blueTemperature > requestedTemp + 1) {
+      boilerState = Off;
+      pumpState = On;
+    }
+
+    if (blueTemperature < requestedTemp + 1) {
+      boilerState = On;
+      pumpState = On;
+    }
+
+  }
+  
+  digitalWrite( BOILER, boilerState);
+  digitalWrite( PUMP, pumpState);
+  
+  // indicate  state
+  digitalWrite(Water25, state == 1);
+  digitalWrite(Water35, state == 2);
+  digitalWrite(Water55, state == 3);
+  digitalWrite(Water65, state == 4);
 }
 
 void   receiveRadio()
 {
+  uint8_t rcvdSize = sizeof(receivedData);
 
-    uint8_t buf[VW_MAX_MESSAGE_LEN];
-    uint8_t buflen = VW_MAX_MESSAGE_LEN;
+  if (vw_get_message((uint8_t *)&receivedData, &rcvdSize))
+  {
+    Serial.print("got message to: ");
+    Serial.println(    receivedData.To);
 
-    if (vw_get_message(buf, &buflen)) // Non-blocking
-    {
-	int i;
-        char ch;
+    // boiler is dev 1
+    if (receivedData.To == 1) {
+      digitalWrite(LED, true); // Flash a light to show received good message
+      // commands
+      // 0 - stop heating
+      // 1 - hot water
+      // 2 - standard heating
 
-        digitalWrite(LED, true); // Flash a light to show received good message
-	// Message with a good checksum received, dump it.
-	Serial.print("Got: ");
-	
-	for (i = 0; i < buflen; i++)
-	{
-              ch = buf[i];
-  	    Serial.print(ch);
-	    Serial.print(" ");
-	}
-	Serial.println("");
-        digitalWrite(LED, false);
+      state = receivedData.Command;
+      requestedTemp = receivedData.Data1;
+      digitalWrite(LED, false);
     }
+  }
 }
 
 void readTemp()
@@ -221,18 +278,12 @@ void readTemp()
     Serial.println(brownTemperature);
 
     Serial.println("DONE");
-
-
     digitalWrite(LED, 0);
-
-
   }
 }
 
-
 void handleSwitch()
 {
-
   switchReading = digitalRead(SWITCH);
 
   // if the input just went from LOW and HIGH and we've waited long enough
@@ -278,7 +329,7 @@ void handleSwitch()
       //55 deg
       Serial.print("W55");
       if (blueTemperature > 55 + 1) {
-      Serial.print(", shutting boiler...., ");
+        Serial.print(", shutting boiler...., ");
         digitalWrite( BOILER, 0);
         digitalWrite(LED, 1);
         //wait 25 sec to coll down    delay(15000);
@@ -297,8 +348,8 @@ void handleSwitch()
       Serial.print("W65");
       //65 deg
       if (blueTemperature > 65 + 1) {
-      Serial.print(", shutting boiler...., ");
-      digitalWrite( BOILER, 0);
+        Serial.print(", shutting boiler...., ");
+        digitalWrite( BOILER, 0);
         //wait 25 sec to coll down    delay(15000);
         digitalWrite(LED, 1);
         delay(25000);
@@ -312,10 +363,10 @@ void handleSwitch()
     }
 
     Serial.print(", PUMP: ");
-    Serial.print(digitalRead(PUMP));
+    Serial.print(pumpState);
 
     Serial.print(", BOILER: ");
-    Serial.println(digitalRead(BOILER));
+    Serial.println(boilerState);
 
     digitalWrite(Water25, state == 1);
     digitalWrite(Water35, state == 2);
