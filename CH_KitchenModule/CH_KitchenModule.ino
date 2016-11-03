@@ -22,17 +22,17 @@
 
 struct centralHeatingData
 {
-int    From; 
-int    Seq; 
-int    To =-1;
-int    Command ; 
-int    Ack;
-  int    Data1=0;
-int    Data2=0;
-int    Data3=0;
-int    Data4=0;
-int    Data5=0;
-int    Data6=0;
+  int    From;
+  int    Seq;
+  int    To = -1;
+  int    Command ;
+  int    Ack;
+  float    Data1 = 0;
+  float    Data2 = 0;
+  float    Data3 = 0;
+  float    Data4 = 0;
+  float    Data5 = 0;
+  float    Data6 = 0;
 };
 
 centralHeatingData HData;
@@ -50,41 +50,42 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-// HData receivedData2 ; //  = {2,1,1,1,0,1,2,3,4,5,6,"0123456789"};
-HData.From =1; 
-HData.Seq =1;
-HData.To =1;
-HData.Command=2 ; 
-HData.Ack =1;
-HData.Data1=0;
-HData.Data2=0;
-HData.Data3=0;
-HData.Data4=0;
-HData.Data5=0;
-HData.Data6=0;
-//HData.strData='012345678';
-int c =1;
-for (int i=1;i<80;i++){
-if (c>2){
-c=0;
-}
- HData.Command=c++ ; 
-  HData.Data1=i;
-  
-  Serial.println("START: ");
-  
-  vw_send((uint8_t *)&HData, sizeof(HData));
-  
-//    vw_send((uint8_t *)&receivedData2, sizeof( receivedData2));
-  vw_wait_tx();       
-  
-  Serial.println("STOP: ");
-  digitalWrite(13, 0);
-  digitalWrite(13, 1);
-  digitalWrite(13, 0);
-  digitalWrite(13, 1     );
+  // HData receivedData2 ; //  = {2,1,1,1,0,1,2,3,4,5,6,"0123456789"};
+  HData.From = 2;
+  HData.Seq = 1;
+  HData.To = 1;
+  HData.Command = 2 ;
+  HData.Ack = 1;
+  HData.Data1 = 0;
+  HData.Data2 = 0;
+  HData.Data3 = 0;
+  HData.Data4 = 0;
+  HData.Data5 = 0;
+  HData.Data6 = 0;
+  //HData.strData='012345678';
+  int c = 1;
+  for (int i = 1; i < 40; i++) {
+    if (c > 3) {
+      c = 0;
+    }
+    
+    HData.Command = c++ ;
+    HData.Data1 = i;
+
+    Serial.println("START: ");
+
+    vw_send((uint8_t *)&HData, sizeof(HData));
+
+    //    vw_send((uint8_t *)&receivedData2, sizeof( receivedData2));
+    vw_wait_tx();
+
+    Serial.println("STOP: ");
+    digitalWrite(13, 0);
+    digitalWrite(13, 1);
+    digitalWrite(13, 0);
+    digitalWrite(13, 1     );
     delay(100);
     digitalWrite(13, 0);
-  delay(5000);
-}
+    delay(5000);
+  }
 }

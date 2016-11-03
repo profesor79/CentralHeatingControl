@@ -138,7 +138,7 @@ void setup(void)
     vw_set_ptt_inverted(true); // Required for DR3100
     vw_set_tx_pin(TX_MODULE);
     vw_set_rx_pin(RX_MODULE);
-    vw_setup(1000);	 // Bits per sec
+    vw_setup(2000);	 // Bits per sec
     vw_rx_start();       // Start the receiver PLL running
   }
 }
@@ -160,7 +160,7 @@ void loop(void)
   // handleSwitch();
   receiveRadio();
   handleBoiler();
- delay(500);
+  delay(500);
 }
 
 
@@ -178,7 +178,8 @@ void   handleBoiler() {
 
   if (state == 1)
   {
-    Serial.println("hot water");
+    Serial.print("hot water: temp:");
+    Serial.println( requestedTemp);
     if (blueTemperature > requestedTemp + 1) {
       boilerState = Off;
       pumpState = Off;
@@ -198,7 +199,8 @@ void   handleBoiler() {
   if (state > 1 )
   {
 
-    Serial.println("standard heating");
+    Serial.print("standard heating: temp:");
+    Serial.println( requestedTemp);
     if (blueTemperature > requestedTemp + 1) {
       boilerState = Off;
       pumpState = On;
@@ -210,14 +212,14 @@ void   handleBoiler() {
     }
 
   }
-  
+
   digitalWrite( BOILER, boilerState);
   digitalWrite( PUMP, pumpState);
-  
+
   // indicate  state
-  digitalWrite(Water25, state == 1);
-  digitalWrite(Water35, state == 2);
-  digitalWrite(Water55, state == 3);
+  digitalWrite(Water25, state == 0);
+  digitalWrite(Water35, state == 1);
+  digitalWrite(Water55, state == 2);
   digitalWrite(Water65, state == 4);
 }
 
@@ -240,6 +242,21 @@ void   receiveRadio()
 
       state = receivedData.Command;
       requestedTemp = receivedData.Data1;
+
+      //send readings and current state
+      receivedData.From = 1;
+      receivedData.Ack = receivedData.Seq++;
+      receivedData.To = 0;
+      receivedData.Command = 0 ; //status and readings
+      receivedData.Data1 = blueTemperature  ; // blue sensor
+      receivedData.Data2 = orangeTemperature; // orange sensor
+      receivedData.Data3 = greenTemperature ; // green sensor
+      receivedData.Data4 = boilerState; // boilserState
+      receivedData.Data5 = pumpState; // pumpState
+      receivedData.Data6 = 0;
+
+
+
       digitalWrite(LED, false);
     }
   }
