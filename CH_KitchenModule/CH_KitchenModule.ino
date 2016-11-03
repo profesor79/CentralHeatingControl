@@ -27,12 +27,15 @@ struct centralHeatingData
   int    To = -1;
   int    Command ;
   int    Ack;
-  float    Data1 = 0;
-  float    Data2 = 0;
-  float    Data3 = 0;
-  float    Data4 = 0;
-  float    Data5 = 0;
-  float    Data6 = 0;
+  int    Data0 = 0;
+  int    Data1 = 0;
+  int    Data2 = 0;
+  int    Data3 = 0;
+  int    Data4 = 0;
+  int    Data5 = 0;
+  int    Data6 = 0;
+  int    Data7 = 0;
+  
 };
 
 centralHeatingData HData;
@@ -72,7 +75,10 @@ void loop() {
     HData.Command = c++ ;
     HData.Data1 = i;
 
-    Serial.println("START: ");
+    Serial.print("START: ");
+   Serial.println(sizeof(HData));
+
+
 
     vw_send((uint8_t *)&HData, sizeof(HData));
 

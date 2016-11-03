@@ -3,13 +3,12 @@
 #include <DallasTemperature.h>
 #include <EEPROM.h>
 #include <VirtualWire.h>
-#include "definitions.h"
+
 
 // Data wire is plugged into port 2 on the Arduino
 #define BLUE_TEMP_SENSOR 		3
 #define ORANGE_TEMP_SENSOR		4
 #define GREEN_TEMP_SENSOR 		5
-#define BROWN_TEMP_SENSOR 		6
 
 #define PUMP             		7
 #define BOILER                          8
@@ -28,6 +27,24 @@
 
 #define On 0   // inversed logic for relays
 #define Off 1
+
+struct centralHeatingData
+{
+  int    From;
+  int    Seq;
+  int    To = -1;
+  int    Command ;
+  int    Ack;
+  int    Data0 = 0;
+  int    Data1 = 0;
+  int    Data2 = 0;
+  int    Data3 = 0;
+  int    Data4 = 0;
+  int    Data5 = 0;
+  int    Data6 = 0;
+  int    Data7 = 0;
+};
+
 
 centralHeatingData receivedData;
 int boilerState = Off, pumpState = Off;
@@ -54,24 +71,20 @@ long tempDebounce = 30000;
 OneWire blueTemp(BLUE_TEMP_SENSOR);
 OneWire orangeTemp(ORANGE_TEMP_SENSOR	);
 OneWire  greenTemp(GREEN_TEMP_SENSOR 	);
-OneWire  brownTemp(BROWN_TEMP_SENSOR 	);
 
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature blueTempSensor(&blueTemp);
 DallasTemperature orangeTempSensor(&orangeTemp);
 DallasTemperature  greenTempSensor(&greenTemp);
-DallasTemperature  brownTempSensor(&brownTemp);
 
 // arrays to hold device addresses
 DeviceAddress blueThermometer   ,
               orangeThermometer ,
-              greenThermometer  ,
-              brownThermometer  ;
+              greenThermometer  ;
 
 float    blueTemperature   = 70,
          orangeTemperature = 70,
-         greenTemperature  = 70,
-         brownTemperature  = 70;
+         greenTemperature  = 70;
 
 void setup(void)
 {
@@ -105,18 +118,16 @@ void setup(void)
   blueTempSensor.begin();
   orangeTempSensor.begin();
   greenTempSensor.begin();
-  brownTempSensor.begin();
+
 
   if (!blueTempSensor.getAddress  ( blueThermometer  , 0)) Serial.println("Unable to find address for Device BLUE");
   if (!orangeTempSensor.getAddress( orangeThermometer , 0)) Serial.println("Unable to find address for Device ORANGE");
   if (!greenTempSensor.getAddress ( greenThermometer  , 0)) Serial.println("Unable to find address for Device GREEN");
-  if (!brownTempSensor.getAddress ( brownThermometer  , 0)) Serial.println("Unable to find address for Device BROWN");
 
   // set the resolution to 9 bit per device
   blueTempSensor.setResolution( blueThermometer  , TEMPERATURE_PRECISION);
   orangeTempSensor.setResolution( orangeThermometer, TEMPERATURE_PRECISION);
   greenTempSensor.setResolution( greenThermometer , TEMPERATURE_PRECISION);
-  brownTempSensor.setResolution( brownThermometer , TEMPERATURE_PRECISION);
 
   pinMode(LED, OUTPUT);
   pinMode(Water25,  OUTPUT);
@@ -226,7 +237,7 @@ void   handleBoiler() {
 void   receiveRadio()
 {
   uint8_t rcvdSize = sizeof(receivedData);
-
+  Serial.println( "....receive start....");
   if (vw_get_message((uint8_t *)&receivedData, &rcvdSize))
   {
     Serial.print("got message to: ");
@@ -235,6 +246,7 @@ void   receiveRadio()
     // boiler is dev 1
     if (receivedData.To == 1) {
       digitalWrite(LED, true); // Flash a light to show received good message
+
       // commands
       // 0 - stop heating
       // 1 - hot water
@@ -248,18 +260,40 @@ void   receiveRadio()
       receivedData.Ack = receivedData.Seq++;
       receivedData.To = 0;
       receivedData.Command = 0 ; //status and readings
-      receivedData.Data1 = blueTemperature  ; // blue sensor
-      receivedData.Data2 = orangeTemperature; // orange sensor
-      receivedData.Data3 = greenTemperature ; // green sensor
-      receivedData.Data4 = boilerState; // boilserState
-      receivedData.Data5 = pumpState; // pumpState
-      receivedData.Data6 = 0;
+      int main = (int)blueTemperature;
+      float rest = (blueTemperature - main) * 100;
+      receivedData.Data0 = main  ; // blue sensor
+      receivedData.Data1 = (int)rest;
+
+      int main1 = (int)orangeTemperature;
+      float rest1 = (orangeTemperature - main1) * 100;
+      receivedData.Data2 = main1; // orange sensor
+      receivedData.Data3 = rest1;
+
+      int main2 = (int)greenTemperature;
+      float rest2 = (greenTemperature - main2) * 100;
+      receivedData.Data4 =  main2; // green sensor
+      receivedData.Data5 = rest2;
+      
+      receivedData.Data6 = boilerState; // boilserState
+      receivedData.Data7 = pumpState; // pumpState
+
+    Serial.print("START: ");
+   Serial.println(sizeof(receivedData));
 
 
+
+    vw_send((uint8_t *)&receivedData, sizeof(receivedData));
+
+    //    vw_send((uint8_t *)&receivedData2, sizeof( receivedData2));
+    vw_wait_tx();
+
+    Serial.println("STOP: ");
 
       digitalWrite(LED, false);
     }
   }
+  Serial.println( "....receive stop....");
 }
 
 void readTemp()
@@ -288,11 +322,6 @@ void readTemp()
     greenTemperature = getTemperature(greenThermometer, greenTempSensor);
     Serial.print("greenTemperature: ");
     Serial.println(greenTemperature);
-
-    brownTempSensor.requestTemperatures();
-    brownTemperature = getTemperature(brownThermometer, brownTempSensor);
-    Serial.print("brownTemperature: ");
-    Serial.println(brownTemperature);
 
     Serial.println("DONE");
     digitalWrite(LED, 0);
