@@ -10,8 +10,8 @@ struct centralHeatingData
   int    From = 0;
   int    Seq = 1;
   int    To = -1;
-  int    Command ;
-  int    Ack;
+  int    Command =0;
+  int    Ack=0;
   int    Data0 = 0;
   int    Data1 = 0;
   int    Data2 = 0;
@@ -35,7 +35,7 @@ void setup() {
   vw_set_ptt_inverted(true); // Required for DR3100
   vw_set_tx_pin(TX_MODULE);
   vw_set_rx_pin(RX_MODULE);
-  vw_setup(2000);	 // Bits per sec
+  vw_setup(500);	 // Bits per sec
   vw_rx_start();       // Start the receiver PLL running
 }
 
@@ -47,16 +47,26 @@ void loop() {
     sendingData.To = i; // just to scan network of devices
     sendingData.Ack = i;
     sendingData.Command = i;
+sendingData.From = 0;
+sendingData.Seq = i;
+sendingData.Data0 = 0;
+sendingData.Data1 = 0;
+sendingData.Data2 = 0;
+sendingData.Data3 = 0;
+sendingData.Data4 = 0;
+sendingData.Data5 = 0;
+sendingData.Data6 = 0;
+sendingData.Data7 = 0;
 
 
     Serial.print("Round: ");
     Serial.print(i);
     Serial.print("  START: ");
     Serial.println(sizeof(sendingData));
-    vw_rx_stop();
+    
     vw_send((uint8_t *)&receivedData, sizeof(sendingData));
     vw_wait_tx();
-    vw_rx_start();       // Start the receiver PLL running
+
     Serial.println("STOP: ");
 
     uint8_t rcvdSize = sizeof(receivedData);
