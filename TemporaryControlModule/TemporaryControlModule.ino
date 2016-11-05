@@ -7,20 +7,11 @@
 #define RX_MODULE 11
 struct centralHeatingData
 {
-  int    From = 0;
-  int    Seq = 1;
-  int    To = -1;
-  int    Command =0;
-  int    Ack=0;
-  int    Data0 = 0;
-  int    Data1 = 0;
-  int    Data2 = 0;
-  int    Data3 = 0;
-  int    Data4 = 0;
-  int    Data5 = 0;
-  int    Data6 = 0;
-  int    Data7 = 0;
-
+  uint8_t    From = 0;
+  uint8_t    To = 255;
+  uint8_t    Command = 0;
+  uint8_t    Data0 = 0;
+  uint8_t    Data1 = 0;
 };
 
 centralHeatingData receivedData;
@@ -45,25 +36,16 @@ void loop() {
   for (int i = 1; i < 11; i++)
   {
     sendingData.To = i; // just to scan network of devices
-    sendingData.Ack = i;
     sendingData.Command = i;
-sendingData.From = 0;
-sendingData.Seq = i;
-sendingData.Data0 = 0;
-sendingData.Data1 = 0;
-sendingData.Data2 = 0;
-sendingData.Data3 = 0;
-sendingData.Data4 = 0;
-sendingData.Data5 = 0;
-sendingData.Data6 = 0;
-sendingData.Data7 = 0;
-
+    sendingData.From = 0;
+    sendingData.Data0 = 0;
+    sendingData.Data1 = 0;
 
     Serial.print("Round: ");
     Serial.print(i);
     Serial.print("  START: ");
     Serial.println(sizeof(sendingData));
-    
+
     vw_send((uint8_t *)&receivedData, sizeof(sendingData));
     vw_wait_tx();
 
@@ -72,36 +54,19 @@ sendingData.Data7 = 0;
     uint8_t rcvdSize = sizeof(receivedData);
     //give a 5 tries to get ansver
     for (int y = 0; y < 105; y++) {
-      Serial.print(y);
-      Serial.print("...");
+   
       if (vw_get_message((uint8_t *)&receivedData, &rcvdSize))
       {
         Serial.print("receivedData.From 	");
         Serial.println(receivedData.From 	);
-        Serial.print("receivedData.Seq 	");
-        Serial.println(receivedData.Seq 	);
         Serial.print("receivedData.To 	");
         Serial.println(receivedData.To 	);
         Serial.print("receivedData.Command	");
         Serial.println(receivedData.Command);
-        Serial.print("receivedData.Ack	");
-        Serial.println(receivedData.Ack	);
         Serial.print("receivedData.Data0	");
         Serial.println(receivedData.Data0	);
         Serial.print("receivedData.Data1	");
         Serial.println(receivedData.Data1	);
-        Serial.print("receivedData.Data2	");
-        Serial.println(receivedData.Data2	);
-        Serial.print("receivedData.Data3 	");
-        Serial.println(receivedData.Data3 	);
-        Serial.print("receivedData.Data4	");
-        Serial.println(receivedData.Data4	);
-        Serial.print("receivedData.Data5	");
-        Serial.println(receivedData.Data5	);
-        Serial.print("receivedData.Data6	");
-        Serial.println(receivedData.Data6	);
-        Serial.print("receivedData.Data7	");
-        Serial.println(receivedData.Data7	);
       }
 
       delay(10); //wait
