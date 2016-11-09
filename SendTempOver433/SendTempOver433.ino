@@ -52,8 +52,10 @@ void setup() {
 	vw_set_ptt_inverted(true); // Required for DR3100
 	vw_set_tx_pin(TX_MODULE);
 	vw_set_rx_pin(RX_MODULE);
-	vw_setup(500);	 // Bits per sec
+	vw_setup(2000);	 // Bits per sec
 	vw_rx_start();       // Start the receiver PLL running
+
+	pinMode(13, OUTPUT);
 }
 
 
@@ -75,9 +77,40 @@ void loop() {
 		temp = DHT11.temperature;
 		Serial.print("Temperature (oC): ");
 		Serial.println(temp);
+		
+
+		digitalWrite(13, 1);
 
 		Serial.print("Humidity (%): ");
 		Serial.println(humidity);
+
+		String  values = "Sensor:";
+		values += SENSOR;
+		values += ("H:");
+		
+		char hum[10];
+		dtostrf(humidity, 2, 0, hum);
+
+		
+		values += hum;
+		values += "C:";
+
+		char tmp[2];
+		dtostrf(temp, 2, 0, tmp);
+
+		values += tmp;
+
+		char tmpC[500];
+		values.toCharArray(tmpC, 500);
+
+		const char *msg = tmpC;
+		// Send a reply
+		Serial.print("START sending text message SIZE: ");
+		Serial.println(strlen(msg));
+		vw_send((uint8_t *)msg, strlen(msg));
+		vw_wait_tx();
+		Serial.println("STOP: ");
+		digitalWrite(13, 0);
 	}
 
 	uint8_t rcvdSize = sizeof(receivedData);

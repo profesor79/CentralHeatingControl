@@ -47,7 +47,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM\utility;C:\Users\Grzegorz\Documents\Arduino\libraries\OneWire;C:\Users\Grzegorz\Documents\Arduino\libraries\OneWire\utility;C:\Users\Grzegorz\Documents\Arduino\libraries\VirtualWire;C:\Users\Grzegorz\Documents\Arduino\libraries\VirtualWire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Users\Grzegorz\Documents\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;E:\GitHub\arduino\SendTempOver433;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM;C:\Users\Grzegorz\Documents\Arduino\libraries\OneWire;C:\Users\Grzegorz\Documents\Arduino\libraries\VirtualWire;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM\utility;C:\Users\Grzegorz\Documents\Arduino\libraries\OneWire\utility;C:\Users\Grzegorz\Documents\Arduino\libraries\VirtualWire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Users\Grzegorz\Documents\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;E:\GitHub\arduino\SendTempOver433;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM;C:\Users\Grzegorz\Documents\Arduino\libraries\OneWire;C:\Users\Grzegorz\Documents\Arduino\libraries\VirtualWire;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;E:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\ojgqyxca.fvk\Micro Platforms\default\debuggers;C:\Users\Grzegorz\Documents\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>E:\GitHub\arduino\SendTempOver433\__vm\.SendTempOver433.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;F_CPU=16000000L;ARDUINO=107010;ARDUINO_AVR_PRO;ARDUINO_ARCH_AVR;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -79,7 +79,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dth11.h" />
     <ClInclude Include="__vm\.SendTempOver433.vsarduino.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dht11.cpp" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
@@ -87,4 +91,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties arduino.upload.port="COM6" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
