@@ -5,6 +5,16 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TempControl", "TempControl.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CH_boilerModule", "..\CH_boilerModule\CH_boilerModule.vcxproj", "{BFB8C01B-4AB4-418F-A0BA-6DAC3831696F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CH_KitchenModule", "..\CH_KitchenModule\CH_KitchenModule.vcxproj", "{E03DDAFE-D743-42B4-A849-B9346A6385F1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TemporaryControlModule", "..\TemporaryControlModule\TemporaryControlModule.vcxproj", "{855CACB2-437D-40DC-BE25-34FFFD037719}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sketch", "..\TempSensor_433Radio\TempSensor_433Radio.vcxproj", "{CBBEBB50-69E4-408A-AC31-13C67F16260E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SendTempOver433", "..\SendTempOver433\SendTempOver433.vcxproj", "{89CA893D-BCFA-4D27-AE3B-3C913C0330E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,6 +25,26 @@ Global
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.Build.0 = Debug|Win32
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.ActiveCfg = Release|Win32
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.Build.0 = Release|Win32
+		{BFB8C01B-4AB4-418F-A0BA-6DAC3831696F}.Debug|x86.ActiveCfg = Debug|Win32
+		{BFB8C01B-4AB4-418F-A0BA-6DAC3831696F}.Debug|x86.Build.0 = Debug|Win32
+		{BFB8C01B-4AB4-418F-A0BA-6DAC3831696F}.Release|x86.ActiveCfg = Release|Win32
+		{BFB8C01B-4AB4-418F-A0BA-6DAC3831696F}.Release|x86.Build.0 = Release|Win32
+		{E03DDAFE-D743-42B4-A849-B9346A6385F1}.Debug|x86.ActiveCfg = Debug|Win32
+		{E03DDAFE-D743-42B4-A849-B9346A6385F1}.Debug|x86.Build.0 = Debug|Win32
+		{E03DDAFE-D743-42B4-A849-B9346A6385F1}.Release|x86.ActiveCfg = Release|Win32
+		{E03DDAFE-D743-42B4-A849-B9346A6385F1}.Release|x86.Build.0 = Release|Win32
+		{855CACB2-437D-40DC-BE25-34FFFD037719}.Debug|x86.ActiveCfg = Debug|Win32
+		{855CACB2-437D-40DC-BE25-34FFFD037719}.Debug|x86.Build.0 = Debug|Win32
+		{855CACB2-437D-40DC-BE25-34FFFD037719}.Release|x86.ActiveCfg = Release|Win32
+		{855CACB2-437D-40DC-BE25-34FFFD037719}.Release|x86.Build.0 = Release|Win32
+		{CBBEBB50-69E4-408A-AC31-13C67F16260E}.Debug|x86.ActiveCfg = Debug|Win32
+		{CBBEBB50-69E4-408A-AC31-13C67F16260E}.Debug|x86.Build.0 = Debug|Win32
+		{CBBEBB50-69E4-408A-AC31-13C67F16260E}.Release|x86.ActiveCfg = Release|Win32
+		{CBBEBB50-69E4-408A-AC31-13C67F16260E}.Release|x86.Build.0 = Release|Win32
+		{89CA893D-BCFA-4D27-AE3B-3C913C0330E8}.Debug|x86.ActiveCfg = Debug|Win32
+		{89CA893D-BCFA-4D27-AE3B-3C913C0330E8}.Debug|x86.Build.0 = Debug|Win32
+		{89CA893D-BCFA-4D27-AE3B-3C913C0330E8}.Release|x86.ActiveCfg = Release|Win32
+		{89CA893D-BCFA-4D27-AE3B-3C913C0330E8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
