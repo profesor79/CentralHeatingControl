@@ -29,7 +29,7 @@ frame details
 "00-02-00-00-getAllReadings____"
 
 */
-
+    
 
 
 void setup()
@@ -69,24 +69,46 @@ void loop()
   sendData();
 }
 
-
+`
 void sendData()
 {
-  String from = "01-";
-String to = "00-";
-String command = "00-";
-String insideTemp = "insideTemp:";
-  //dtostrf(floatVar, minStringWidthIncDecimalPoint, numVarsAfterDecimal, charBuf);
+
+
+/*
+frame details
+
+|--from--|--to--|--messageNo--|--order--|--text--|
+
+|--from--|--to--|--messageNo--|--order--|--text--|
+ 123456789012345678901234567890
+"______________________________"
+"00-01-00-00-getAllReadings____"
+"01-00-05-00-inletWater:25.20__"
+"01-00-04-00-outletWater:27.40_"
+"01-00-03-00-outsideTemp:7.40__"
+"01-00-02-00-pump:1____________"
+"01-00-01-00-boiler:1__________"
+"01-00-00-00-t:20161228222600__"
+
+"00-02-00-00-getAllReadings____"
+
+*/
+
+char mesageBase[] = "01-00-0";
+
+char mesage[30];
+strcat (mesage, mesageBase);
+strcat (mesage, "5");
+strcat (mesage, "insideTemp:");
 float insideTempValue=12.4567;
+char value [5];
+//dtostrf(floatVar, minStringWidthIncDecimalPoint, numVarsAfterDecimal, charBuf);
+dtostrf(insideTempValue, 5, 2, value );
+strcat (mesage, value);
+strcat (mesage, "______");
 
-String insideTempValueString = String(insideTempValue, 2);   
-
-String msg2 = from+to+command+insideTemp+insideTempValueString;
-  char User [30] = "Logan";
-  strcat (User, "'s Device");
-
-char *msg =User  ;
-  vw_send((uint8_t *)msg, strlen(msg));
+char *msg =mesage  ;
+  vw_send((uint8_t *)msg, strlen(mesage));
   vw_wait_tx(); // Wait until the whole message is gone
 
   delay(200);
