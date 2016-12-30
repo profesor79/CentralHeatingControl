@@ -4,12 +4,12 @@
 
 void setup() {
 
-  Serial.begin(9600);  // Used to type in characters
+  Serial.begin(57600);  // Used to type in characters
   // put your setup code here, to run once:
   vw_set_ptt_inverted(true); // Required for DR3100
   vw_set_tx_pin(TX_MODULE);
   vw_set_rx_pin(RX_MODULE);
-  vw_setup(500);	 // Bits per sec
+  vw_setup(200);	 // Bits per sec
   vw_rx_start();       // Start the receiver PLL running
 
 }
@@ -36,7 +36,7 @@ void receiveData()
 
  char message[30];
 
-  if (vw_wait_rx_max(250)) {
+  if (vw_wait_rx_max(2000)) {
     if (vw_get_message(buf, &buflen)) // Non-blocking
     {
       char tmp[1];
@@ -101,20 +101,16 @@ void sendData()
     mesage7[i] = 0;
   }
 
-  Serial.println(mesage7);
   strcat (mesage7, mesageBase);
-  Serial.println(mesage7);
   strcat (mesage7, "-");
-  Serial.println(mesage7);
   strcat (mesage7, "getAll");
   Serial.println(mesage7);
   //dtostrf(floatVar, minStringWidthIncDecimalPoint, numVarsAfterDecimal, charBuf);
   strcat (mesage7, "_");
-  Serial.println(mesage7);
  const char *msg = mesage7;
   vw_send((uint8_t *)msg, strlen(mesage7));
   Serial.print("message sent:");
-    Serial.println(strlen(mesage7));
+ Serial.println(strlen(mesage7));
   Serial.println(mesage7);
   vw_wait_tx(); // Wait until the whole message is gone
 }
