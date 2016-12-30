@@ -21,7 +21,7 @@ void loop() {
 
   sendData();
   Serial.println("Sending data finshed");
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < 10; i++) {
 
     receiveData();
 
@@ -36,18 +36,22 @@ void receiveData()
 
  char message[30];
 
-  if (vw_wait_rx_max(100)) {
+  if (vw_wait_rx_max(250)) {
     if (vw_get_message(buf, &buflen)) // Non-blocking
     {
       char tmp[1];
 
+     String eoeo ;
       for (int i = 0; i < buflen; i++)
       {
-        tmp[0] = buf[i];
-        strcat (message, tmp);
+         eoeo +=(char)buf[i]   ;
       }
-      Serial.print("Got: ");
-      Serial.println(message);
+     Serial.println("");    
+
+          Serial.print("Got: ");       
+          Serial.println(eoeo); 
+ 
+
 
     }
   }
