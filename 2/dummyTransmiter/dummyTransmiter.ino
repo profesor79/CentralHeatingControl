@@ -21,7 +21,7 @@ void loop() {
 
   sendData();
   Serial.println("Sending data finshed");
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 2; i++) {
 
     receiveData();
 
